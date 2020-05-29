@@ -1,6 +1,7 @@
 package cz.vibri.udemy.streams;
 
 import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class SystemIn {
 
