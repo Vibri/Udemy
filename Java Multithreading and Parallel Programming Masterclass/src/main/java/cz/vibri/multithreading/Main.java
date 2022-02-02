@@ -1,5 +1,7 @@
 package cz.vibri.multithreading;
 
+import java.util.List;
+
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
@@ -9,7 +11,87 @@ public class Main {
 //        threadPriorities();
 //        threadState();
 //        threadGroups();
-        threadDaemonVsUser();
+//        threadDaemonVsUser();
+//        threadExceptions();
+//        threadException2();
+//        threadException3();
+        threadException4();
+    }
+
+    private static void threadException4() throws InterruptedException {
+        Thread thread1 = new Thread(new ThreadWithRuntimeException(), "ThreadName");
+
+
+        Thread.setDefaultUncaughtExceptionHandler((Thread t, Throwable exception) -> {
+            System.out.println("New default exception handler: " + exception.getMessage());
+        });
+
+        thread1.setDefaultUncaughtExceptionHandler((Thread t, Throwable exception) -> {
+            System.out.println("New default thread exception handler: " + exception.getMessage());
+        });
+
+        thread1.start();
+        thread1.join();
+    }
+
+    private static void threadException3() throws InterruptedException {
+        Thread thread1 = new Thread(new ThreadWithRuntimeException(), "ThreadName");
+
+        thread1.setDefaultUncaughtExceptionHandler((Thread t, Throwable exception) -> {
+            System.out.println("New default thread exception handler: " + exception.getMessage());
+        });
+
+        thread1.start();
+        thread1.join();
+    }
+
+    private static void threadException2() throws InterruptedException {
+        Thread thread1 = new Thread(new ThreadWithRuntimeException(), "ThreadName");
+
+        Thread.setDefaultUncaughtExceptionHandler((Thread t, Throwable exception) -> {
+            System.out.println("New default exception handler: " + exception.getMessage());
+        });
+
+        thread1.start();
+        thread1.join();
+    }
+
+    private static void threadExceptions() throws InterruptedException {
+        Thread thread1 = new Thread(new CustomThreadGroup("Group1"), new ThreadWithRuntimeException(), "Thread1");
+        thread1.start();
+        thread1.join();
+    }
+
+
+
+    static class CustomThreadGroup extends ThreadGroup {
+
+        public CustomThreadGroup(String name) {
+            super(name);
+        }
+
+        public CustomThreadGroup(ThreadGroup parent, String name) {
+            super(parent,name);
+        }
+
+        @Override
+        public void uncaughtException(Thread t, Throwable e) {
+            System.out.println("Viktor catch exception:" + e.getMessage());
+        }
+    }
+
+    static class ThreadWithRuntimeException implements Runnable {
+
+
+        public ThreadWithRuntimeException() {
+
+        }
+
+        @Override
+        public void run() {
+            List<String> list = null;
+            list.size();
+        }
     }
 
     private static void threadDaemonVsUser() throws InterruptedException {
