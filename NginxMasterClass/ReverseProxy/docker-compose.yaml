@@ -1,0 +1,18 @@
+version: "3.8"
+services:  
+  nginx:
+    image: nginx:1.23.2
+    ports:
+      - 20000:80
+    volumes:
+      - ${PWD}/proxy/nginx.conf:/etc/nginx/nginx.conf
+  
+  app1:
+    image: viktornginx-speciallog
+    ports: 
+      - 20001:80
+
+  sec:
+    image: viktornginx-secret
+    ports:
+      - 20002:443

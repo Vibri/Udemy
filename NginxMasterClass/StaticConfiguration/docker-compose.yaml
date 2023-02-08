@@ -1,0 +1,6 @@
+version: "3.8"
+services:  
+  nginx:
+    image: nginx:1.23.2
+    ports:
+      - 20000:80
