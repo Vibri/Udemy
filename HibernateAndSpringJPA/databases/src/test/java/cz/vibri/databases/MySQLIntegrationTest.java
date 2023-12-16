@@ -1,5 +1,10 @@
 package cz.vibri.databases;
 
+import cz.vibri.databases.domain.BookNatural;
+import cz.vibri.databases.domain.composite.AuthorComposite;
+import cz.vibri.databases.domain.composite.NameId;
+import cz.vibri.databases.repositories.AuthorCompositeRepository;
+import cz.vibri.databases.repositories.BookNaturalRepository;
 import cz.vibri.databases.repositories.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +23,37 @@ public class MySQLIntegrationTest {
 
     @Autowired
     BookRepository bookRepository;
+
+    @Autowired
+    BookNaturalRepository bookNaturalRepository;
+
+    @Autowired
+    AuthorCompositeRepository authorCompositeRepository;
+
+    @Test
+    void authorCompositeTest() {
+        NameId nameId = new NameId("John", "T");
+        AuthorComposite authorComposite = new AuthorComposite();
+        authorComposite.setFirstName(nameId.getFirstName());
+        authorComposite.setLastName(nameId.getLastName());
+        authorComposite.setCountry("US");
+
+        AuthorComposite saved = authorCompositeRepository.save(authorComposite);
+        assertThat(saved).isNotNull();
+
+        AuthorComposite fetched = authorCompositeRepository.getReferenceById(nameId);
+        assertThat(fetched).isNotNull();
+    }
+
+    @Test
+    void bookNaturalTest() {
+        BookNatural bookNatural = new BookNatural();
+        bookNatural.setTitle("My Book");
+        BookNatural saved = bookNaturalRepository.save(bookNatural);
+
+        BookNatural fetched = bookNaturalRepository.getReferenceById(saved.getTitle());
+        assertThat(fetched).isNotNull();
+    }
 
     @Test
     void testMySQL() {
